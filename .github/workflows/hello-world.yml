@@ -1,17 +1,25 @@
-name: "Hello World"
-description: "This is a simple hello world action"
-author: Artem Lajko
-branding:
-  icon: "activity"
-  color: "blue"
+name: hello-world-example
 
-inputs:
-  custom-text:
-    description: "Custom text to echo"
-    required: true
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/hello-world.yml"
 
-runs:
-  using: docker
-  image: Dockerfile
-  args:
-    - ${{ inputs.custom-text }}
+jobs:
+  hello-world-example:
+    name: "Test: Hello World"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Hello World
+        uses: ./
+        with:
+          custom-text: "Hi, my name is XY!"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
